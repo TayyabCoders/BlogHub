@@ -1,0 +1,23 @@
+# Ignore node_modules for frontend
+client/node_modules/
+
+# Ignore Python virtual environment for backend
+backend/venv/
+
+# Ignore SQLite database file for backend (optional)
+backend/db.sqlite3
+
+# Ignore logs, temp files, etc.
+*.log
+*.pid
+*.swp
+*.swo
+*.bak
+
+# Ignore build artifacts for frontend
+client/dist/
+client/build/
+
+# Ignore environment variables or sensitive data
+.env
+*.env

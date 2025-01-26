@@ -1,4 +1,4 @@
-import banner from "../images/tech-girl.jpg"
+import banner from "../images/img_header.jpg"
 
 const Header = () => {
   return (

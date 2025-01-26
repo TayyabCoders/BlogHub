@@ -1,0 +1,101 @@
+# version: "3.9"
+
+# services:
+#   # Frontend service (React)
+#   frontend:
+#     # Build context for the React app
+#     build: ./frontend
+#     ports:
+#       - "5173:5173"  # Expose React app on port 3000
+#     environment:
+#       VITE_API_URL: http://backend:8001  # Django API URL inside Docker network
+#     depends_on:
+#       - backend  # Wait for the backend (Django) to be ready
+
+#   # Backend service (Django)
+#   backend:
+#     build: ./backend
+#     ports:
+#       - "8001:8001"  # Expose Django app on port 8000
+#     environment:
+#       DB_URL: sqlite:///db.sqlite3  # SQLite DB connection URL
+#     volumes:
+#       - ./backend:/app  # Mount backend code for live changes (optional)
+#     depends_on:
+#       - db  # Django waits for the database service to be available
+
+#   # Database service (SQLite as a file)
+#   db:
+#     image: nouchka/sqlite  # Custom SQLite Docker image (or you can use a volume)
+#     container_name: sqlite-db
+#     volumes:
+#       - ./backend/db.sqlite3:/app/db.sqlite3  # Mount local SQLite database to backend
+#     networks:
+#       - backend-network  # Ensure the backend and db are on the same network
+
+# # Define a shared network for backend communication
+# networks:
+#   backend-network:
+#     driver: bridge
+
+# # Optionally define named volumes for persistent data
+# volumes:
+#   anime:  # If you need to persist your data across container restarts
+
+
+version: "3.8"
+
+services:
+  # Frontend service (React)
+  frontend:
+    # Build context for the React app
+    build: ./client
+    ports:
+      - "5173:5173"  # Expose React app on port 5173
+    environment:
+      VITE_API_URL: http://backend:8001  # Django API URL inside Docker network
+    depends_on:
+      - backend  # Ensure the backend service starts first
+    networks:
+      - app-network
+    develop:
+      # we specify the files to watch for changes
+      watch:
+        # it'll watch for changes in package.json and package-lock.json and rebuild the container if there are any changes
+        - path: ./client/package.json
+          action: rebuild
+        - path: ./client/package-lock.json
+          action: rebuild
+        # it'll watch for changes in the frontend directory and sync the changes with the container real time
+        - path: ./client
+          target: /app
+          action: sync
+
+  # Backend service (Django)
+  backend:
+    build: ./backend
+    ports:
+      - "8001:8001"  # Expose Django app on port 8001
+    environment:
+      DB_URL: sqlite:///app/db.sqlite3  # SQLite DB connection URL
+    volumes:
+      - ./backend:/app  # Mount backend code for live changes
+      - ./backend/db.sqlite3:/app/db.sqlite3  # Mount the SQLite DB file to the backend container
+    networks:
+      - app-network
+    # develop:
+    #   watch:
+    #     - path: ./backend/requirements.txt
+    #       action: rebuild  # Rebuild container if dependencies change
+    #     - path: ./backend
+    #       target: /app
+    #       action: sync  # Sync code changes to the container in real-time
+
+# Define a shared network for backend and frontend communication
+networks:
+  app-network:
+    driver: bridge
+
+# Optionally define named volumes for persistent data if needed (for SQLite)
+volumes:
+  anime:  # This is useful if you need persistent data across restarts (optional)
