@@ -1,48 +1,3 @@
-# version: "3.9"
-
-# services:
-#   # Frontend service (React)
-#   frontend:
-#     # Build context for the React app
-#     build: ./frontend
-#     ports:
-#       - "5173:5173"  # Expose React app on port 3000
-#     environment:
-#       VITE_API_URL: http://backend:8001  # Django API URL inside Docker network
-#     depends_on:
-#       - backend  # Wait for the backend (Django) to be ready
-
-#   # Backend service (Django)
-#   backend:
-#     build: ./backend
-#     ports:
-#       - "8001:8001"  # Expose Django app on port 8000
-#     environment:
-#       DB_URL: sqlite:///db.sqlite3  # SQLite DB connection URL
-#     volumes:
-#       - ./backend:/app  # Mount backend code for live changes (optional)
-#     depends_on:
-#       - db  # Django waits for the database service to be available
-
-#   # Database service (SQLite as a file)
-#   db:
-#     image: nouchka/sqlite  # Custom SQLite Docker image (or you can use a volume)
-#     container_name: sqlite-db
-#     volumes:
-#       - ./backend/db.sqlite3:/app/db.sqlite3  # Mount local SQLite database to backend
-#     networks:
-#       - backend-network  # Ensure the backend and db are on the same network
-
-# # Define a shared network for backend communication
-# networks:
-#   backend-network:
-#     driver: bridge
-
-# # Optionally define named volumes for persistent data
-# volumes:
-#   anime:  # If you need to persist your data across container restarts
-
-
 version: "3.8"
 
 services:
@@ -83,15 +38,7 @@ services:
       - ./backend/db.sqlite3:/app/db.sqlite3  # Mount the SQLite DB file to the backend container
     networks:
       - app-network
-    # develop:
-    #   watch:
-    #     - path: ./backend/requirements.txt
-    #       action: rebuild  # Rebuild container if dependencies change
-    #     - path: ./backend
-    #       target: /app
-    #       action: sync  # Sync code changes to the container in real-time
 
-# Define a shared network for backend and frontend communication
 networks:
   app-network:
     driver: bridge
