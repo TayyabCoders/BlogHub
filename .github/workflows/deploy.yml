@@ -42,13 +42,20 @@ jobs:
     - name: Deploy on AWS EC2 using Docker Compose
       run: |
         ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@${{ secrets.AWS_EC2_IP }} << 'EOF'
+          # Debugging step: Check Docker Compose installation
+          echo "Checking if Docker Compose is installed..."
+          docker-compose --version || echo "docker-compose not found, proceeding with installation..."
+          
           # Install Docker Compose if not already installed
-          if ! command -v docker compose &> /dev/null
+          if ! command -v docker-compose &> /dev/null
           then
             echo "docker-compose not found, installing..."
             sudo curl -L "https://github.com/docker/compose/releases/download/v2.29.6/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
             sudo chmod +x /usr/local/bin/docker-compose
           fi
+
+          # Check if Docker Compose is successfully installed
+          docker-compose --version
 
           # Create directories for project files
           mkdir -p ~/blog
@@ -56,8 +63,9 @@ jobs:
           # Transfer the compose.yml file to EC2 instance
           echo "${{ secrets.AWS_COMPOSE_YML }}" > ~/blog/compose.yml
 
-          # Pull latest images and deploy using docker compose
+          # Pull latest images and deploy using docker-compose
           cd ~/blog
-          docker compose pull
-          docker compose up -d --build
+          docker-compose pull
+          docker-compose up -d --build
         EOF
+
