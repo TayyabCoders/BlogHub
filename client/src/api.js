@@ -2,7 +2,9 @@ import axios from "axios"
 import { jwtDecode } from "jwt-decode"
 
 
-export const BASE_URL = "http://127.0.0.1:8001"
+// export const BASE_URL = "http://127.0.0.1:8001"
+export const BASE_URL = "http://ec2-13-60-171-184.eu-north-1.compute.amazonaws.com:8001";  // Public AWS EC2 URL
+
 
 const api = axios.create({
     baseURL: BASE_URL
