@@ -61,11 +61,7 @@ jobs:
           mkdir -p ~/blog
 
           # Transfer the compose.yml file to EC2 instance
-          if [ -z "$BASE64_ENCODED_CONTENT" ]; then
-            echo "Error: BASE64_ENCODED_CONTENT is empty!"
-            exit 1
-          fi
-          echo $BASE64_ENCODED_CONTENT | base64 -d > ~/blog/compose.yml
+          echo "${{ secrets.AWS_COMPOSE_YML }}" > ~/blog/compose.yml
 
           # Debugging Step: Verify the compose.yml file before running Docker Compose
           echo "Checking if compose.yml exists..."
