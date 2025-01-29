@@ -39,33 +39,40 @@ jobs:
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan -H ${{ secrets.AWS_EC2_IP }} >> ~/.ssh/known_hosts
 
-    - name: Deploy on AWS EC2 using Docker Compose
-      run: |
-        ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@${{ secrets.AWS_EC2_IP }} << 'EOF'
-          # Debugging step: Check Docker Compose installation
-          echo "Checking if Docker Compose is installed..."
-          docker-compose --version || echo "docker-compose not found, proceeding with installation..."
-          
-          # Install Docker Compose if not already installed
-          if ! command -v docker-compose &> /dev/null
-          then
-            echo "docker-compose not found, installing..."
-            sudo curl -L "https://github.com/docker/compose/releases/download/v2.29.6/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-            sudo chmod +x /usr/local/bin/docker-compose
-          fi
+- name: Deploy on AWS EC2 using Docker Compose
+  run: |
+    ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@${{ secrets.AWS_EC2_IP }} << 'EOF'
+      # Debugging step: Check Docker Compose installation
+      echo "Checking if Docker Compose is installed..."
+      docker-compose --version || echo "docker-compose not found, proceeding with installation..."
+      
+      # Install Docker Compose if not already installed
+      if ! command -v docker-compose &> /dev/null
+      then
+        echo "docker-compose not found, installing..."
+        sudo curl -L "https://github.com/docker/compose/releases/download/v2.29.6/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+        sudo chmod +x /usr/local/bin/docker-compose
+      fi
 
-          # Check if Docker Compose is successfully installed
-          docker-compose --version
+      # Check if Docker Compose is successfully installed
+      docker-compose --version
 
-          # Create directories for project files
-          mkdir -p ~/blog
+      # Create directories for project files
+      mkdir -p ~/blog
 
-          # Transfer the compose.yml file to EC2 instance
-          echo $BASE64_ENCODED_CONTENT | base64 -d > ~/blog/compose.yml
+      # Transfer the compose.yml file to EC2 instance
+      echo $BASE64_ENCODED_CONTENT | base64 -d > ~/blog/compose.yml
 
-          # Pull latest images and deploy using docker-compose
-          cd ~/blog
-          docker-compose pull
-          docker-compose up -d --build
-        EOF
+      # 🛠️ Debugging Step: Verify the compose.yml file before running Docker Compose
+      echo "Checking if compose.yml exists..."
+      ls -l ~/blog/compose.yml || echo "compose.yml not found!"
+      echo "Contents of compose.yml:"
+      cat ~/blog/compose.yml || echo "compose.yml is empty!"
+
+      # Pull latest images and deploy using docker-compose
+      cd ~/blog
+      docker-compose pull
+      docker-compose up -d --build
+    EOF
+
 
