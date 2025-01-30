@@ -41,8 +41,8 @@ jobs:
 
     - name: Deploy on AWS EC2 using Docker Compose
       run: |
-        # Transfer compose.yml to EC2 instance
-        scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa compose.yml ubuntu@${{ secrets.AWS_EC2_IP }}:~/blog/compose.yml
+        # Transfer the entire project (including backend, frontend, compose.yml)
+        scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa -r . ubuntu@${{ secrets.AWS_EC2_IP }}:~/blog
 
         # SSH into EC2 and deploy the app
         ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@${{ secrets.AWS_EC2_IP }} << 'EOF'
@@ -61,7 +61,6 @@ jobs:
           docker-compose --version
 
           # Navigate to project directory
-          mkdir -p ~/blog
           cd ~/blog
 
           # Pull the latest Docker images for backend and frontend
@@ -73,10 +72,11 @@ jobs:
           echo "Validating compose.yml file..."
           docker-compose config || { echo "compose.yml validation failed!"; exit 1; }
 
-          # Pull latest images and deploy
+          # Deploy the app with Docker Compose
           echo "Deploying app with Docker Compose..."
           docker-compose up -d --build
         EOF
+
 
 
 
