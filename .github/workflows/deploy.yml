@@ -49,7 +49,7 @@ jobs:
           # Check if Docker Compose is installed
           echo "Checking if Docker Compose is installed..."
           docker-compose --version || echo "docker-compose not found, proceeding with installation..."
-          
+
           # Install Docker Compose if not installed
           if ! command -v docker-compose &> /dev/null; then
             echo "docker-compose not found, installing..."
@@ -61,16 +61,23 @@ jobs:
           docker-compose --version
 
           # Navigate to project directory
+          mkdir -p ~/blog
           cd ~/blog
 
-          # Validate compose.yml format
+          # Pull the latest Docker images for backend and frontend
+          echo "Pulling latest Docker images..."
+          docker pull ${{ secrets.DOCKER_USERNAME }}/blog-backend:latest
+          docker pull ${{ secrets.DOCKER_USERNAME }}/blog-frontend:latest
+
+          # Validate compose.yml file format
           echo "Validating compose.yml file..."
           docker-compose config || { echo "compose.yml validation failed!"; exit 1; }
 
           # Pull latest images and deploy
-          docker-compose pull
+          echo "Deploying app with Docker Compose..."
           docker-compose up -d --build
         EOF
+
 
 
 
