@@ -7,7 +7,7 @@ COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
 # Copy the entire project
 COPY . .
-# Expose port 8000 to communicate with the host
+# Expose port 8001 to communicate with the host
 EXPOSE 8001
 # Command to run the Django server
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8001"]

@@ -6,31 +6,37 @@ services:
     # Build context for the React app
     build: ./client
     ports:
-      - "5173:5173"  # Expose React app on port 5173
+      # - "5173:5173"  # Expose React app on port 5173 # for local development
+      - "0.0.0.0:5173:5173" #for production like aws 
     environment:
-      VITE_API_URL: http://backend:8001  # Django API URL inside Docker network
+      # VITE_API_URL: http://backend:8001  # Django API URL inside Docker network for local development
+      VITE_API_URL: http://ec2-13-60-157-111.eu-north-1.compute.amazonaws.com:8001  # Use EC2 Public IP...used in production
     depends_on:
       - backend  # Ensure the backend service starts first
     networks:
       - app-network
-    develop:
-      # we specify the files to watch for changes
-      watch:
-        # it'll watch for changes in package.json and package-lock.json and rebuild the container if there are any changes
-        - path: ./client/package.json
-          action: rebuild
-        - path: ./client/package-lock.json
-          action: rebuild
-        # it'll watch for changes in the frontend directory and sync the changes with the container real time
-        - path: ./client
-          target: /app
-          action: sync
+    restart: always  # Auto-restart...used in production
+
+    #for local developement  
+    # develop:
+    #   # we specify the files to watch for changes
+    #   watch:
+    #     # it'll watch for changes in package.json and package-lock.json and rebuild the container if there are any changes
+    #     - path: ./client/package.json
+    #       action: rebuild
+    #     - path: ./client/package-lock.json
+    #       action: rebuild
+    #     # it'll watch for changes in the frontend directory and sync the changes with the container real time
+    #     - path: ./client
+    #       target: /app
+    #       action: sync
 
   # Backend service (Django)
   backend:
     build: ./backend
     ports:
-      - "8001:8001"  # Expose Django app on port 8001
+      # - "8001:8001"  # Expose Django app on port 8001...for local development
+      - "0.0.0.0:8001:8001" #used in production
     environment:
       DB_URL: sqlite:///app/db.sqlite3  # SQLite DB connection URL
     volumes:
@@ -38,11 +44,12 @@ services:
       - ./backend/db.sqlite3:/app/db.sqlite3  # Mount the SQLite DB file to the backend container
     networks:
       - app-network
+    restart: always #used in production
 
 networks:
   app-network:
     driver: bridge
 
 # Optionally define named volumes for persistent data if needed (for SQLite)
-volumes:
-  anime:  # This is useful if you need persistent data across restarts (optional)
+# volumes:
+#   anime:  # This is useful if you need persistent data across restarts (optional)
