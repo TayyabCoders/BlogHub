@@ -141,10 +141,12 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30)
 }
 
-CORS_ALLOWED_ORIGINS = [
-"https://domain.com",
-"https://api.domain.com",
-"http://localhost:5173",
-"http://127.0.0.1:9000",
-"http://ec2-13-60-157-111.eu-north-1.compute.amazonaws.com:5173"
-]
+# CORS_ALLOWED_ORIGINS = [
+# "https://domain.com",
+# "https://api.domain.com",
+# "http://localhost:5173",
+# "http://127.0.0.1:9000",
+# "http://ec2-13-60-157-111.eu-north-1.compute.amazonaws.com:5173"
+# ]
+
+CORS_ALLOW_ALL_ORIGINS = True
