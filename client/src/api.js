@@ -10,7 +10,6 @@ export const BASE_URL = config.BASE_URL;
 const api = axios.create({
     baseURL: BASE_URL
 })
-a
 
 api.interceptors.request.use(
     (config) => {
