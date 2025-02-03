@@ -37,11 +37,10 @@ services:
     ports:
       # - "8001:8001"  # Expose Django app on port 8001...for local development
       - "0.0.0.0:8001:8001" #used in production
-    environment:
-      DB_URL: sqlite:///app/db.sqlite3  # SQLite DB connection URL
+    env_file:
+      - ./backend/.env  # Load environment variables from backend/.env
     volumes:
       - ./backend:/app  # Mount backend code for live changes
-      - ./backend/db.sqlite3:/app/db.sqlite3  # Mount the SQLite DB file to the backend container
     networks:
       - app-network
     restart: always #used in production
