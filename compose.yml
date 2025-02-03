@@ -50,4 +50,4 @@ networks:
 
 # Optionally define named volumes for persistent data if needed (for SQLite)
 # volumes:
-#   anime:  # This is useful if you need persistent data across restarts (optional)
+#   anime:  # This is useful if you need persistent data across restarts(optional)
