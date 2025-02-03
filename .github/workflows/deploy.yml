@@ -44,6 +44,9 @@ jobs:
         # Transfer the entire project (including backend, frontend, compose.yml)
         scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa -r . ubuntu@${{ secrets.AWS_EC2_IP }}:~/blog
 
+        # Transfer .env file from backend folder explicitly to EC2
+        scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ./backend/.env ubuntu@${{ secrets.AWS_EC2_IP }}:~/blog/backend/.env
+
         # SSH into EC2 and deploy the app
         ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@${{ secrets.AWS_EC2_IP }} << 'EOF'
           # Check if Docker Compose is installed
