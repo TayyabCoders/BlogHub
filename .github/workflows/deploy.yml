@@ -44,6 +44,10 @@ jobs:
         # Transfer the entire project (including backend, frontend, compose.yml)
         scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa -r . ubuntu@${{ secrets.AWS_EC2_IP }}:~/blog
 
+        # Export GitHub secrets as environment variables
+        export VITE_API_URL=${{ secrets.VITE_API_URL }} 
+        export DB_CREDENTIALS="${{ secrets.DB_CREDENTIALS }}"       
+
         # SSH into EC2 and deploy the app
         ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@${{ secrets.AWS_EC2_IP }} << 'EOF'
           # Check if Docker Compose is installed

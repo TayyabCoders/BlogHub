@@ -8,8 +8,6 @@ services:
     ports:
       # - "5173:5173"  # Expose React app on port 5173 for local development
       - "0.0.0.0:5173:5173" #for production like aws 
-    env_file:
-      - ./client/.env  # Load environment variables from the root .env file
     environment:
       VITE_API_URL: ${VITE_API_URL}  # Use the variable from the .env file
     depends_on:
@@ -38,14 +36,8 @@ services:
     ports:
       # - "8001:8001"  # Expose Django app on port 8001...for local development
       - "0.0.0.0:8001:8001" #used in production
-    env_file:
-      - ./backend/.env  # Load environment variables from backend/.env
     environment:
-      DB_NAME: ${DB_NAME}
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_HOST: ${DB_HOST}
-      DB_PORT: ${DB_PORT}
+      DB_CREDENTIALS: ${DB_CREDENTIALS}  # Use combined secret here
     volumes:
       - ./backend:/app  # Mount backend code for live changes
     networks:
