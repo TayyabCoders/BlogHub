@@ -4,7 +4,7 @@ import config from './config';
 
 
 
-// export const BASE_URL = "http://127.0.0.1:8001"
+// export const BASE_URL = "http://127.0.0.1:8001"  
 export const BASE_URL = config.BASE_URL;
 
 const api = axios.create({
