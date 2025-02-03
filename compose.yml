@@ -6,7 +6,7 @@ services:
     # Build context for the React app
     build: ./client
     ports:
-      # - "5173:5173"  # Expose React app on port 5173 # for local development
+      # - "5173:5173"  # Expose React app on port 5173 for local development
       - "0.0.0.0:5173:5173" #for production like aws 
     env_file:
       - ./client/.env  # Load environment variables from the root .env file
