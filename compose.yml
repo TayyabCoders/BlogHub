@@ -8,9 +8,10 @@ services:
     ports:
       # - "5173:5173"  # Expose React app on port 5173 # for local development
       - "0.0.0.0:5173:5173" #for production like aws 
+    env_file:
+      - ./client/.env  # Load environment variables from the root .env file
     environment:
-      # VITE_API_URL: http://backend:8001  # Django API URL inside Docker network for local development
-      VITE_API_URL: http://ec2-13-60-157-111.eu-north-1.compute.amazonaws.com:8001  # Use EC2 Public IP...used in production
+      VITE_API_URL: ${VITE_API_URL}  # Use the variable from the .env file
     depends_on:
       - backend  # Ensure the backend service starts first
     networks:
@@ -39,6 +40,12 @@ services:
       - "0.0.0.0:8001:8001" #used in production
     env_file:
       - ./backend/.env  # Load environment variables from backend/.env
+    environment:
+      DB_NAME=${DB_NAME}
+      DB_USER=${DB_USER}
+      DB_PASSWORD=${DB_PASSWORD}
+      DB_HOST=${DB_HOST}
+      DB_PORT=${DB_PORT}
     volumes:
       - ./backend:/app  # Mount backend code for live changes
     networks:
