@@ -47,7 +47,6 @@ jobs:
         # SSH into EC2 and deploy the app
         ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@${{ secrets.AWS_EC2_IP }} << 'EOF'
         # Set environment variables from GitHub Actions secrets
-          export DB_CREDENTIALS="${{ secrets.DB_CREDENTIALS }}"
           export VITE_API_URL="${{ secrets.VITE_API_URL }}"
           # Check if Docker Compose is installed
           echo "Checking if Docker Compose is installed..."
