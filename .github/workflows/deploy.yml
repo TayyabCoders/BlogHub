@@ -42,11 +42,7 @@ jobs:
     - name: Deploy on AWS EC2 using Docker Compose
       run: |
         # Transfer the entire project (including backend, frontend, compose.yml)
-        scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa -r . ubuntu@${{ secrets.AWS_EC2_IP }}:~/blog
-
-        # Export GitHub secrets as environment variables
-        export VITE_API_URL=${{ secrets.VITE_API_URL }} 
-        export DB_CREDENTIALS="${{ secrets.DB_CREDENTIALS }}"       
+        scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa -r . ubuntu@${{ secrets.AWS_EC2_IP }}:~/blog       
 
         # SSH into EC2 and deploy the app
         ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@${{ secrets.AWS_EC2_IP }} << 'EOF'
@@ -66,6 +62,9 @@ jobs:
 
           # Navigate to project directory
           cd ~/blog
+
+          echo "DB_CREDENTIALS='${{ secrets.DB_CREDENTIALS }}'" > ~/blog/backend/.env
+          echo "VITE_API_URL='${{ secrets.VITE_API_URL }}'" > ~/blog/client/.env
 
           # Pull the latest Docker images for backend and frontend
           echo "Pulling latest Docker images..."

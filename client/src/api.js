@@ -4,7 +4,7 @@ import { jwtDecode } from "jwt-decode"
 
 
 // export const BASE_URL = "http://127.0.0.1:8001"  
-export const BASE_URL = "http://ec2-13-60-180-72.eu-north-1.compute.amazonaws.com:8001"
+export const BASE_URL = "http://ec2-51-20-55-119.eu-north-1.compute.amazonaws.com:8001"
 // export const BASE_URL = config.BASE_URL;
 
 const api = axios.create({

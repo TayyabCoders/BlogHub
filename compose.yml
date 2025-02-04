@@ -6,10 +6,9 @@ services:
     # Build context for the React app
     build: ./client
     ports:
-      # - "5173:5173"  # Expose React app on port 5173 for local development
-      - "0.0.0.0:5173:5173" #for production like aws 
-    environment:
-      VITE_API_URL: ${VITE_API_URL}  # Use the variable from the .env file
+      - "0.0.0.0:5173:5173" # Expose React app on port 5173 for production like AWS
+    env_file:
+      - ./client/.env  # Load environment variables from client/.env file
     depends_on:
       - backend  # Ensure the backend service starts first
     networks:
@@ -20,15 +19,14 @@ services:
   backend:
     build: ./backend
     ports:
-      # - "8001:8001"  # Expose Django app on port 8001...for local development
-      - "0.0.0.0:8001:8001" #used in production
-    environment:
-      DB_CREDENTIALS: ${DB_CREDENTIALS}  # Use combined secret here
+      - "0.0.0.0:8001:8001" # Expose Django app on port 8001 for production
+    env_file:
+      - ./backend/.env  # Load environment variables from backend/.env file
     volumes:
       - ./backend:/app  # Mount backend code for live changes
     networks:
       - app-network
-    restart: always #used in production
+    restart: always  # Auto-restart...used in production
 
 networks:
   app-network:
@@ -36,4 +34,4 @@ networks:
 
 # Optionally define named volumes for persistent data if needed (for SQLite)
 # volumes:
-#   anime:  # This is useful if you need persistent data across restarts(optional)
+#   anime:  # This is useful if you need persistent data across restarts (optional)
